@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DashPlayer 是一款为英语学习打造的视频播放器，支持双语字幕、按句跳转、查词、AI 字幕和视频处理。"
+    />
+    <title>DashPlayer - 英语学习视频播放器</title>
+    <link rel="icon" href="./assets/logo-light.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="DashPlayer 首页">
+        <img src="./assets/logo-light.png" alt="" />
+        <span>DashPlayer</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#workflow">使用场景</a>
+        <a href="./app.html">网页版播放器</a>
+        <a href="#download">下载</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="切换主题">
+        <span class="theme-icon" aria-hidden="true">☾</span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">专为英语学习打造</p>
+          <h1>把英文视频变成可精听、可查词、可复习的学习空间</h1>
+          <p class="lead">
+            DashPlayer 帮你围绕字幕控制视频：按句跳转、重复当前句、双语对照、快速查词，并用 AI
+            生成字幕与学习内容。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="./app.html">打开网页版播放器</a>
+            <a class="button secondary" href="#download">下载桌面版</a>
+            <a class="button secondary" href="https://github.com/solidSpoon/DashPlayer" target="_blank" rel="noreferrer">查看源码</a>
+          </div>
+        </div>
+
+        <div class="product-panel" aria-label="DashPlayer 界面预览">
+          <div class="window-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <img src="./assets/ai-chat.png" alt="DashPlayer AI 整句学习界面截图" />
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="核心能力">
+        <div>
+          <strong>双语字幕</strong>
+          <span>中英显示灵活切换</span>
+        </div>
+        <div>
+          <strong>按句播放</strong>
+          <span>精听、复读更顺手</span>
+        </div>
+        <div>
+          <strong>AI 辅助</strong>
+          <span>字幕生成与句子分析</span>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Features</p>
+          <h2>学习视频时真正会用到的能力</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <span class="feature-icon">CC</span>
+            <h3>双语字幕</h3>
+            <p>英文、中文、双语或隐藏字幕都可以快速切换，适合泛听和精听之间来回切换。</p>
+          </article>
+          <article>
+            <span class="feature-icon">↔</span>
+            <h3>按字幕跳转</h3>
+            <p>上一句、下一句、重复当前句都围绕字幕粒度设计，减少拖进度条的打断感。</p>
+          </article>
+          <article>
+            <span class="feature-icon">A</span>
+            <h3>悬停查词</h3>
+            <p>看到生词直接悬停查询，保留上下文，不必离开当前视频学习节奏。</p>
+          </article>
+          <article>
+            <span class="feature-icon">AI</span>
+            <h3>AI 字幕与整句学习</h3>
+            <p>为没有字幕的视频生成字幕，也可以分析句子、短语和语法点。</p>
+          </article>
+          <article>
+            <span class="feature-icon">⌘</span>
+            <h3>快捷键与遥控</h3>
+            <p>键盘和蓝牙手柄都能控制播放，适合长时间沉浸式学习。</p>
+          </article>
+          <article>
+            <span class="feature-icon">✂</span>
+            <h3>视频处理工具</h3>
+            <p>内置下载、转码、切分等工具，方便把素材整理成自己的学习库。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow">
+        <div class="section-heading">
+          <p class="eyebrow">Workflow</p>
+          <h2>从视频素材到复习资产</h2>
+        </div>
+        <ol>
+          <li>
+            <span>01</span>
+            <div>
+              <h3>导入视频和字幕</h3>
+              <p>打开本地视频、音频和 SRT 字幕，或先用内置工具下载视频。</p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <h3>围绕句子精听</h3>
+              <p>按字幕跳转、重复、调速、隐藏译文，把注意力放回声音和语境。</p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <h3>沉淀词句</h3>
+              <p>查词、收藏片段、使用 AI 分析，把值得复习的内容留下来。</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="download" class="download">
+        <div>
+          <p class="eyebrow">Download</p>
+          <h2>开始使用 DashPlayer</h2>
+          <p>
+            桌面版支持 macOS 和 Windows。当前网站是静态部署版本，可以放到 GitHub Pages、Vercel、
+            Netlify 或任意静态服务器。
+          </p>
+        </div>
+        <div class="download-actions">
+          <a class="button primary" href="https://github.com/solidSpoon/DashPlayer/releases/latest" target="_blank" rel="noreferrer">下载最新版</a>
+          <a class="button secondary" href="https://solidspoon.xyz/DashPlayer/home.html" target="_blank" rel="noreferrer">阅读使用指南</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>DashPlayer 5.1.7</span>
+      <a href="https://github.com/solidSpoon/DashPlayer" target="_blank" rel="noreferrer">GitHub</a>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

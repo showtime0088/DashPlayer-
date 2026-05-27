@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DashPlayer Web 版播放器，支持浏览器本地视频、本地 SRT 字幕、查词和 AI 句子分析接口。"
+    />
+    <title>DashPlayer Web Player</title>
+    <link rel="icon" href="./assets/logo-light.png" />
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="./index.html" aria-label="返回 DashPlayer 首页">
+        <img src="./assets/logo-light.png" alt="" />
+        <span>DashPlayer Web</span>
+      </a>
+      <div class="header-actions">
+        <button class="icon-button" id="themeToggle" type="button" aria-label="切换主题">☾</button>
+      </div>
+    </header>
+
+    <main class="player-shell">
+      <section class="stage">
+        <div class="video-frame">
+          <video id="video" controls playsinline></video>
+          <div class="subtitle-overlay" id="subtitleOverlay"></div>
+          <div class="empty-state" id="emptyState">
+            <img src="./assets/logo-light.png" alt="" />
+            <h1>打开本地视频开始学习</h1>
+            <p>视频和字幕只在你的浏览器里处理，不会上传到服务器。</p>
+          </div>
+        </div>
+
+        <div class="control-strip">
+          <label class="file-button">
+            <input id="videoInput" type="file" accept="video/*,audio/*" />
+            选择视频
+          </label>
+          <label class="file-button">
+            <input id="subtitleInput" type="file" accept=".srt,.vtt,text/plain" />
+            选择字幕
+          </label>
+          <button id="prevLine" type="button">上一句</button>
+          <button id="repeatLine" type="button">重复</button>
+          <button id="nextLine" type="button">下一句</button>
+          <label class="speed-control">
+            倍速
+            <select id="speedSelect">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section class="panel-section current-card">
+          <div class="panel-heading">
+            <span>当前句</span>
+            <button id="copyCurrent" type="button">复制</button>
+          </div>
+          <p id="currentSentence">还没有加载字幕。</p>
+        </section>
+
+        <section class="panel-section">
+          <div class="panel-heading">
+            <span>查词</span>
+            <button id="lookupSelected" type="button">查选中文本</button>
+          </div>
+          <div class="lookup-row">
+            <input id="lookupInput" type="text" placeholder="输入英文单词" autocomplete="off" />
+            <button id="lookupButton" type="button">查询</button>
+          </div>
+          <div class="lookup-result" id="lookupResult">选中字幕里的单词，或手动输入后查询。</div>
+        </section>
+
+        <section class="panel-section ai-card">
+          <div class="panel-heading">
+            <span>AI 接口</span>
+            <button id="saveAiConfig" type="button">保存</button>
+          </div>
+          <label>
+            接口地址
+            <input id="aiBaseUrl" type="url" placeholder="https://api.openai.com/v1/chat/completions" />
+          </label>
+          <label>
+            API Key
+            <input id="aiKey" type="password" placeholder="sk-..." autocomplete="off" />
+          </label>
+          <label>
+            模型
+            <input id="aiModel" type="text" placeholder="填写你的模型名" />
+          </label>
+          <label>
+            提问内容
+            <textarea id="aiPrompt" rows="4"></textarea>
+          </label>
+          <button class="primary-action" id="askAi" type="button">分析当前句</button>
+          <div class="ai-result" id="aiResult">保存接口配置后，可以让 AI 解释当前字幕句子。</div>
+        </section>
+      </aside>
+
+      <section class="transcript-panel">
+        <div class="transcript-header">
+          <span>字幕列表</span>
+          <input id="subtitleSearch" type="search" placeholder="搜索字幕" />
+        </div>
+        <div class="subtitle-list" id="subtitleList"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
