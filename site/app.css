@@ -326,7 +326,8 @@ video {
 }
 
 .lookup-result,
-.ai-result {
+.ai-result,
+.audio-status {
   min-height: 88px;
   margin-top: 12px;
   padding: 12px;
@@ -336,6 +337,23 @@ video {
   line-height: 1.65;
   white-space: pre-wrap;
   user-select: text;
+}
+
+.audio-status {
+  margin-top: 0;
+}
+
+.audio-status strong {
+  color: var(--text);
+}
+
+.audio-status ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.audio-status li {
+  margin: 4px 0;
 }
 
 .ai-card {

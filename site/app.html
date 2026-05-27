@@ -46,6 +46,7 @@
           <button id="prevLine" type="button">上一句</button>
           <button id="repeatLine" type="button">重复</button>
           <button id="nextLine" type="button">下一句</button>
+          <button id="restoreSound" type="button">恢复声音</button>
           <label class="speed-control">
             倍速
             <select id="speedSelect">
@@ -66,6 +67,16 @@
             <button id="copyCurrent" type="button">复制</button>
           </div>
           <p id="currentSentence">还没有加载字幕。</p>
+        </section>
+
+        <section class="panel-section audio-card">
+          <div class="panel-heading">
+            <span>声音状态</span>
+            <button id="refreshAudioStatus" type="button">刷新</button>
+          </div>
+          <div class="audio-status" id="audioStatus">
+            选择视频后会显示浏览器音频兼容性和音量状态。
+          </div>
         </section>
 
         <section class="panel-section">

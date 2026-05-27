@@ -13,6 +13,9 @@ const els = {
   repeatLine: document.querySelector("#repeatLine"),
   nextLine: document.querySelector("#nextLine"),
   speedSelect: document.querySelector("#speedSelect"),
+  restoreSound: document.querySelector("#restoreSound"),
+  refreshAudioStatus: document.querySelector("#refreshAudioStatus"),
+  audioStatus: document.querySelector("#audioStatus"),
   copyCurrent: document.querySelector("#copyCurrent"),
   lookupInput: document.querySelector("#lookupInput"),
   lookupButton: document.querySelector("#lookupButton"),
@@ -32,6 +35,8 @@ const state = {
   filteredIndexes: [],
   activeIndex: -1,
   videoUrl: "",
+  videoFile: null,
+  audioCheckTimer: 0,
 };
 
 const defaultAiPrompt =
@@ -68,6 +73,90 @@ function saveAiConfig() {
     }),
   );
   els.aiResult.textContent = "已保存到当前浏览器。正式上线时，建议改成后端代理，避免 API Key 暴露在网页里。";
+}
+
+function getFileExtension(file) {
+  const match = file?.name?.toLowerCase().match(/\.([a-z0-9]+)$/);
+  return match ? match[1] : "";
+}
+
+function getBrowserSupportHint(file) {
+  if (!file) return "尚未选择视频。";
+
+  const extension = getFileExtension(file);
+  const type = file.type || "";
+  const support = type ? els.video.canPlayType(type) : "";
+  const commonSafeFormats = ["mp4", "m4v", "mov", "webm", "mp3", "m4a", "wav", "ogg"];
+  const riskyFormats = ["mkv", "avi", "rmvb", "flv", "ts", "m2ts"];
+
+  if (support === "probably") return `浏览器报告可以播放：${type}`;
+  if (support === "maybe") return `浏览器报告可能可以播放：${type}`;
+
+  if (riskyFormats.includes(extension)) {
+    return `${extension.toUpperCase()} 在 Windows 浏览器里经常出现有画面没声音，尤其是 AC3、EAC3、DTS 音轨。建议转成 MP4(H.264 + AAC)。`;
+  }
+
+  if (commonSafeFormats.includes(extension)) {
+    return `文件扩展名 ${extension.toUpperCase()} 通常可播放；如果没声音，优先检查系统音量、浏览器标签页是否静音，以及视频音频编码是否为 AAC/MP3/Opus。`;
+  }
+
+  return "无法从文件类型判断兼容性。网页播放器依赖浏览器解码能力，推荐 MP4(H.264 + AAC)。";
+}
+
+function getAudioTrackSummary() {
+  const tracks = els.video.audioTracks;
+  if (!tracks) return "当前浏览器没有暴露音轨列表。";
+  if (!tracks.length) return "浏览器没有检测到可用音轨。";
+  return Array.from(tracks)
+    .map((track, index) => `音轨 ${index + 1}: ${track.label || "未命名"} ${track.enabled ? "已启用" : "未启用"}`)
+    .join("；");
+}
+
+function restoreSound() {
+  els.video.defaultMuted = false;
+  els.video.muted = false;
+  els.video.volume = 1;
+
+  const tracks = els.video.audioTracks;
+  if (tracks?.length) {
+    Array.from(tracks).forEach((track, index) => {
+      track.enabled = index === 0;
+    });
+  }
+
+  updateAudioStatus("已尝试取消静音、音量调到 100%，并启用第一个音轨。");
+}
+
+function updateAudioStatus(prefix = "") {
+  const file = state.videoFile;
+  const decodedBytes = Number(els.video.webkitAudioDecodedByteCount || 0);
+  const decodedText = decodedBytes ? `${Math.round(decodedBytes / 1024)} KB` : "暂未检测到";
+  const statusItems = [
+    `文件：${file ? file.name : "未选择"}`,
+    `音量：${Math.round(els.video.volume * 100)}%，${els.video.muted ? "已静音" : "未静音"}`,
+    `音轨：${getAudioTrackSummary()}`,
+    `已解码音频：${decodedText}`,
+    `兼容性：${getBrowserSupportHint(file)}`,
+  ];
+
+  if (file && !els.video.muted && els.video.volume > 0 && els.video.readyState >= 2 && !decodedBytes) {
+    statusItems.push("如果视频已经播放但仍然没有声音，最常见原因是音频编码不被 Windows 浏览器支持。");
+  }
+
+  els.audioStatus.innerHTML = `
+    ${prefix ? `<strong>${escapeHtml(prefix)}</strong>` : ""}
+    <ul>
+      ${statusItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function scheduleAudioStatusUpdates() {
+  window.clearInterval(state.audioCheckTimer);
+  state.audioCheckTimer = window.setInterval(() => {
+    if (!state.videoFile) return;
+    updateAudioStatus();
+  }, 2500);
 }
 
 function parseTimestamp(value) {
@@ -329,8 +418,11 @@ function bindEvents() {
     const file = els.videoInput.files?.[0];
     if (!file) return;
     if (state.videoUrl) URL.revokeObjectURL(state.videoUrl);
+    state.videoFile = file;
     state.videoUrl = URL.createObjectURL(file);
     els.video.src = state.videoUrl;
+    restoreSound();
+    scheduleAudioStatusUpdates();
     els.emptyState.classList.add("hidden");
   });
 
@@ -350,11 +442,28 @@ function bindEvents() {
 
   els.video.addEventListener("loadedmetadata", () => {
     els.video.playbackRate = Number(els.speedSelect.value);
+    restoreSound();
+  });
+
+  els.video.addEventListener("volumechange", () => {
+    updateAudioStatus();
+  });
+
+  els.video.addEventListener("playing", () => {
+    updateAudioStatus("正在播放。");
+  });
+
+  els.video.addEventListener("error", () => {
+    const message = els.video.error?.message || "浏览器无法播放这个文件。";
+    updateAudioStatus(`${message} 建议换成 MP4(H.264 + AAC)。`);
   });
 
   els.speedSelect.addEventListener("change", () => {
     els.video.playbackRate = Number(els.speedSelect.value);
   });
+
+  els.restoreSound.addEventListener("click", restoreSound);
+  els.refreshAudioStatus.addEventListener("click", () => updateAudioStatus("已刷新声音状态。"));
 
   els.prevLine.addEventListener("click", () => stepSubtitle(-1));
   els.nextLine.addEventListener("click", () => stepSubtitle(1));
